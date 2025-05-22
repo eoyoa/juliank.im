@@ -1,0 +1,4 @@
+export function MainContent() {
+    return <>
+    </>;
+}
