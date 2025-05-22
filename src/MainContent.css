@@ -1,0 +1,11 @@
+.main-content {
+    position: relative;
+}
+
+.foreground {
+    position: absolute;
+}
+
+.background {
+    position: absolute;
+}
