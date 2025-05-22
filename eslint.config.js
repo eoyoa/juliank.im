@@ -13,6 +13,10 @@ const tsConfig = tseslint.config(
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirName,
+      },
     },
     plugins: {
       "react-hooks": reactHooks,
