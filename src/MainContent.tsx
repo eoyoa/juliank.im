@@ -1,12 +1,12 @@
 import { Foreground } from "./foreground/Foreground.tsx";
 import { Background } from "./background/Background.tsx";
-import "./MainContent.css";
+import { Box } from "@mui/material";
 
 export function MainContent() {
   return (
-    <div className={"container"}>
+    <Box sx={{ position: "relative", width: 1, height: 1 }}>
       <Foreground />
       <Background />
-    </div>
+    </Box>
   );
 }

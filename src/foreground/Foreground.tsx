@@ -2,12 +2,21 @@ import "./Foreground.css";
 import { Stack } from "@mui/material";
 import { MutableTitle } from "./components/MutableTitle.tsx";
 import { LinkButtons } from "./components/LinkButtons.tsx";
+import { StackedBox } from "../common/StackedBox.tsx";
 
 export function Foreground() {
   return (
-    <Stack className={"foreground"} direction={"column"}>
-      <MutableTitle />
-      <LinkButtons />
-    </Stack>
+    <StackedBox zIndex={1}>
+      <Stack
+        direction={"column"}
+        width={"100%"}
+        height={"100%"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
+        <MutableTitle />
+        <LinkButtons />
+      </Stack>
+    </StackedBox>
   );
 }

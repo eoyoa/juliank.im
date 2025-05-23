@@ -1,3 +1,5 @@
+import { StackedBox } from "../common/StackedBox.tsx";
+
 export function Background() {
-  return <div className={"background"}>Background</div>;
+  return <StackedBox>Background</StackedBox>;
 }
