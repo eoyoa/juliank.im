@@ -1,32 +1,5 @@
-import { InputBase, type InputBaseProps, Typography } from "@mui/material";
-import {
-  type ChangeEvent,
-  type ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-
-const InputBaseWithChildren = ({
-  children,
-  ...props
-}: InputBaseProps & { children?: ReactNode }) => {
-  let value = "";
-  if (children) {
-    if (typeof children == "string" || typeof children == "number") {
-      value = children.toString();
-    }
-  }
-
-  return (
-    <InputBase
-      {...props}
-      className={""}
-      value={value}
-      inputProps={{ className: props.className }}
-    />
-  );
-};
+import { useEffect, useRef, useState } from "react";
+import { EditableTypography } from "./EditableTypography.tsx";
 
 function simulateTextChange(inputElement: HTMLInputElement, text: string) {
   inputElement.focus({ preventScroll: true });
@@ -37,10 +10,6 @@ export function MutableTitle() {
   const [text, setText] = useState<string>("juliank.im");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const onChange = (value: string) => {
-    setText(value);
-  };
-
   useEffect(() => {
     if (!inputRef.current) return;
 
@@ -48,21 +17,6 @@ export function MutableTitle() {
   }, [text]);
 
   return (
-    <Typography
-      variant={"h1"}
-      component={InputBaseWithChildren}
-      inputRef={inputRef}
-      textAlign={"center"}
-      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-        onChange(e.target.value);
-      }}
-      sx={{
-        outlineWidth: 0,
-        outlineStyle: "solid",
-        outlineColor: "transparent",
-      }}
-    >
-      {text}
-    </Typography>
+    <EditableTypography text={text} setText={setText} inputRef={inputRef} />
   );
 }
