@@ -1,4 +1,3 @@
-import "./Foreground.css";
 import { Stack } from "@mui/material";
 import { MutableTitle } from "./components/MutableTitle.tsx";
 import { LinkButtons } from "./components/LinkButtons.tsx";
