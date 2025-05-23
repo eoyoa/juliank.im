@@ -4,7 +4,7 @@ import "./MainContent.css";
 
 export function MainContent() {
   return (
-    <div className={"main-content"}>
+    <div className={"container"}>
       <Foreground />
       <Background />
     </div>

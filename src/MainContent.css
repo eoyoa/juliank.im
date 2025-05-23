@@ -1,11 +1,11 @@
-.main-content {
-    position: relative;
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
-.foreground {
-    position: absolute;
-}
-
-.background {
-    position: absolute;
+.foreground, .background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
