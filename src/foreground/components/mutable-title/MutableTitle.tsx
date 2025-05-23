@@ -28,6 +28,11 @@ const InputBaseWithChildren = ({
   );
 };
 
+function simulateTextChange(inputElement: HTMLInputElement, text: string) {
+  inputElement.focus({ preventScroll: true });
+  inputElement.setSelectionRange(text.length - 1, text.length - 1);
+}
+
 export function MutableTitle() {
   const [text, setText] = useState<string>("juliank.im");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -39,11 +44,8 @@ export function MutableTitle() {
   useEffect(() => {
     if (!inputRef.current) return;
 
-    const inputElement = inputRef.current;
-
-    inputElement.focus({ preventScroll: true });
-    inputElement.setSelectionRange(text.length - 1, text.length - 1);
-  }, [text.length]);
+    simulateTextChange(inputRef.current, text);
+  }, [text]);
 
   return (
     <Typography

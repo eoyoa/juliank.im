@@ -1,5 +1,5 @@
 import { Stack } from "@mui/material";
-import { MutableTitle } from "./components/MutableTitle.tsx";
+import { MutableTitle } from "./components/mutable-title/MutableTitle.tsx";
 import { LinkButtons } from "./components/LinkButtons.tsx";
 import { StackedBox } from "../common/StackedBox.tsx";
 
