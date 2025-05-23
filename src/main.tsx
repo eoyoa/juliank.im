@@ -10,7 +10,7 @@ const theme = createTheme({
     dark: true,
   },
   typography: {
-    fontFamily: `"Roboto Mono", monospace`,
+    fontFamily: ['"Roboto Mono"', "monospace"].join(","),
   },
 });
 
