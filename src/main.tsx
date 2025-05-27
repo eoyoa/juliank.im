@@ -14,6 +14,9 @@ const theme = responsiveFontSizes(
       fontFamily: ['"Roboto Mono"', "monospace"].join(","),
     },
   }),
+  {
+    factor: 2.5,
+  },
 );
 
 createRoot(document.getElementById("root") as Element).render(
