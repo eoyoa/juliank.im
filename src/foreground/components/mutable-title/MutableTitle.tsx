@@ -20,10 +20,12 @@ function getIndexToChange(curr: string, target: string) {
 export function MutableTitle() {
   const titles = useMemo(() => ["juliank.im", "i'm juliank."], []);
 
+  // TODO: these state variables can probably be abstracted away when cat
   const [i, setI] = useState<number>(0);
+  const [isAnimating, setIsAnimating] = useState<boolean>(true);
+
   const [text, setText] = useState<string>(titles[i]);
 
-  const [isAnimating, setIsAnimating] = useState<boolean>(true);
   const handleUserInput = () => {
     setIsAnimating(false);
   };
@@ -34,6 +36,8 @@ export function MutableTitle() {
   useEffect(() => {
     // TODO: change timer to go back to animating eventually
     if (!isAnimating) return;
+
+    // TODO: await a promise instead to prepare for the cat
     const timer = setTimeout(() => {
       if (i >= titles.length) return;
 
