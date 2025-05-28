@@ -23,9 +23,17 @@ export function MutableTitle() {
   const [i, setI] = useState<number>(0);
   const [text, setText] = useState<string>(titles[i]);
 
+  const [isAnimating, setIsAnimating] = useState<boolean>(true);
+  const handleUserInput = () => {
+    setIsAnimating(false);
+  };
+
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // is animating
   useEffect(() => {
+    // TODO: change timer to go back to animating eventually
+    if (!isAnimating) return;
     const timer = setTimeout(() => {
       if (i >= titles.length) return;
 
@@ -54,9 +62,14 @@ export function MutableTitle() {
     return () => {
       clearTimeout(timer);
     };
-  }, [i, text, titles]);
+  }, [i, isAnimating, text, titles]);
 
   return (
-    <EditableTypography text={text} setText={setText} inputRef={inputRef} />
+    <EditableTypography
+      text={text}
+      setText={setText}
+      inputRef={inputRef}
+      onUserInput={handleUserInput}
+    />
   );
 }

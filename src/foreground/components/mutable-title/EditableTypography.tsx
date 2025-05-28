@@ -32,12 +32,14 @@ interface MutableTitleProps {
   text: string;
   setText: Dispatch<SetStateAction<string>>;
   inputRef: RefObject<HTMLInputElement | null>;
+  onUserInput: () => void;
 }
 
 export function EditableTypography({
   text,
   setText,
   inputRef,
+  onUserInput,
 }: MutableTitleProps) {
   const onChange = (value: string) => {
     setText(value);
@@ -51,6 +53,7 @@ export function EditableTypography({
       textAlign={"center"}
       onChange={(e: ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
+        onUserInput();
       }}
       sx={{
         outlineWidth: 0,
