@@ -28,11 +28,12 @@ function InputBaseWithChildren({
   );
 }
 
-interface MutableTitleProps {
+interface EditableTypographyProps {
   text: string;
   setText: Dispatch<SetStateAction<string>>;
   inputRef: RefObject<HTMLInputElement | null>;
   onUserInput: () => void;
+  fontSize: string;
 }
 
 export function EditableTypography({
@@ -40,7 +41,8 @@ export function EditableTypography({
   setText,
   inputRef,
   onUserInput,
-}: MutableTitleProps) {
+  fontSize,
+}: EditableTypographyProps) {
   const onChange = (value: string) => {
     setText(value);
   };
@@ -55,6 +57,7 @@ export function EditableTypography({
         onChange(e.target.value);
         onUserInput();
       }}
+      fontSize={fontSize}
       sx={{
         outlineWidth: 0,
         outlineStyle: "solid",
