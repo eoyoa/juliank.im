@@ -2,17 +2,22 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { MainContent } from "./MainContent.tsx";
-import { createTheme, ThemeProvider } from "@mui/material";
+import { createTheme, responsiveFontSizes, ThemeProvider } from "@mui/material";
 import "@fontsource/roboto-mono";
 
-const theme = createTheme({
-  colorSchemes: {
-    dark: true,
+const theme = responsiveFontSizes(
+  createTheme({
+    colorSchemes: {
+      dark: true,
+    },
+    typography: {
+      fontFamily: ['"Roboto Mono"', "monospace"].join(","),
+    },
+  }),
+  {
+    factor: 2.75,
   },
-  typography: {
-    fontFamily: ['"Roboto Mono"', "monospace"].join(","),
-  },
-});
+);
 
 createRoot(document.getElementById("root") as Element).render(
   <StrictMode>

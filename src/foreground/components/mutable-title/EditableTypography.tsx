@@ -33,7 +33,6 @@ interface EditableTypographyProps {
   setText: Dispatch<SetStateAction<string>>;
   inputRef: RefObject<HTMLInputElement | null>;
   onUserInput: () => void;
-  fontSize: string;
 }
 
 export function EditableTypography({
@@ -41,7 +40,6 @@ export function EditableTypography({
   setText,
   inputRef,
   onUserInput,
-  fontSize,
 }: EditableTypographyProps) {
   const onChange = (value: string) => {
     setText(value);
@@ -57,7 +55,6 @@ export function EditableTypography({
         onChange(e.target.value);
         onUserInput();
       }}
-      fontSize={fontSize}
       sx={{
         outlineWidth: 0,
         outlineStyle: "solid",

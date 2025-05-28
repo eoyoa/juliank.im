@@ -19,10 +19,6 @@ function getIndexToChange(curr: string, target: string) {
 
 export function MutableTitle() {
   const titles = useMemo(() => ["juliank.im", "i'm juliank."], []);
-  const longestTitleLength = useMemo(
-    () => titles.reduce((a, b) => (a.length > b.length ? a : b)).length,
-    [titles],
-  );
 
   const [i, setI] = useState<number>(0);
   const [text, setText] = useState<string>(titles[i]);
@@ -74,7 +70,6 @@ export function MutableTitle() {
       setText={setText}
       inputRef={inputRef}
       onUserInput={handleUserInput}
-      fontSize={`calc(100vw / ${(longestTitleLength + 2).toString()})`}
     />
   );
 }

@@ -13,7 +13,7 @@ export function LinkButton({ link, Icon }: LinkButtonProps) {
         window.open(link);
       }}
     >
-      <Icon sx={{ fontSize: "5vw" }} />
+      <Icon />
     </IconButton>
   );
 }
