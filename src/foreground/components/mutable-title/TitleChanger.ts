@@ -16,22 +16,36 @@ interface TitleChange {
 
 export class TitleChanger {
   readonly titles: string[] = ["juliank.im", "i'm juliank."];
-  #titleIndex: number = 0;
+  #titleIndex = 0;
 
-  next(currTitle: string): TitleChange {
-    if (this.#titleIndex >= this.titles.length)
-      return { newTitle: currTitle, caretIndex: currTitle.length };
+  readonly #delay = 750;
 
-    const targetTitle = this.titles[this.#titleIndex];
+  timer: number | undefined = undefined;
 
-    if (currTitle === targetTitle) {
-      this.#titleIndex++;
-      return this.next(currTitle);
-    }
+  next(currTitle: string, abortSignal: AbortSignal): Promise<TitleChange> {
+    return new Promise((resolve) => {
+      if (this.#titleIndex >= this.titles.length)
+        resolve({ newTitle: currTitle, caretIndex: currTitle.length });
 
-    const caretIndex = getIndexToChange(currTitle, targetTitle) + 1;
-    const newTitle =
-      targetTitle.slice(0, caretIndex) + currTitle.slice(caretIndex);
-    return { newTitle, caretIndex };
+      const targetTitle = this.titles[this.#titleIndex];
+
+      if (currTitle === targetTitle) {
+        this.#titleIndex++;
+        void this.next(currTitle, abortSignal).then(resolve);
+      }
+
+      const caretIndex = getIndexToChange(currTitle, targetTitle) + 1;
+      const newTitle =
+        targetTitle.slice(0, caretIndex) + currTitle.slice(caretIndex);
+      this.timer = setTimeout(() => {
+        resolve({ newTitle, caretIndex });
+      }, this.#delay);
+
+      abortSignal.onabort = () => {
+        console.log("TitleChanger.next abort signal triggered!");
+
+        clearTimeout(this.timer);
+      };
+    });
   }
 }

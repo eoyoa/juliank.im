@@ -11,6 +11,8 @@ export function MutableTitle() {
   const [titleChanger] = useState<TitleChanger>(() => new TitleChanger());
   const [text, setText] = useState<string>(titleChanger.titles[0]);
 
+  const [abortController] = useState(() => new AbortController());
+
   // TODO: this state variables can probably be abstracted away when cat
   const [isAnimating, setIsAnimating] = useState<boolean>(true);
 
@@ -24,8 +26,11 @@ export function MutableTitle() {
     // TODO: if not animating, go back to animating eventually
     if (!isAnimating) return;
 
-    const timer = setTimeout(() => {
-      const { newTitle, caretIndex } = titleChanger.next(text);
+    const changeTitle = async () => {
+      const { newTitle, caretIndex } = await titleChanger.next(
+        text,
+        abortController.signal,
+      );
       setText(newTitle);
 
       // hack to update dom immediately
@@ -34,12 +39,14 @@ export function MutableTitle() {
         inputRef.current.value = newTitle;
         showCaretAtIndex(inputRef.current, caretIndex);
       }
-    }, 750);
+    };
+
+    changeTitle().catch(console.error);
 
     return () => {
-      clearTimeout(timer);
+      abortController.abort();
     };
-  }, [isAnimating, text, titleChanger]);
+  }, [abortController, isAnimating, text, titleChanger]);
 
   return (
     <EditableTypography
