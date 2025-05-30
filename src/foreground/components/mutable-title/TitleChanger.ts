@@ -20,7 +20,7 @@ export class TitleChanger {
 
   readonly #delay = 750;
 
-  timer: number | undefined = undefined;
+  #timer: number | undefined = undefined;
 
   next(currTitle: string, abortSignal: AbortSignal): Promise<TitleChange> {
     return new Promise((resolve) => {
@@ -37,14 +37,14 @@ export class TitleChanger {
       const caretIndex = getIndexToChange(currTitle, targetTitle) + 1;
       const newTitle =
         targetTitle.slice(0, caretIndex) + currTitle.slice(caretIndex);
-      this.timer = setTimeout(() => {
+      this.#timer = setTimeout(() => {
         resolve({ newTitle, caretIndex });
       }, this.#delay);
 
       abortSignal.onabort = () => {
         console.log("TitleChanger.next abort signal triggered!");
 
-        clearTimeout(this.timer);
+        clearTimeout(this.#timer);
       };
     });
   }
