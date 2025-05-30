@@ -37,10 +37,10 @@ export class TitleChanger {
       const caretIndex = getIndexToChange(currTitle, targetTitle) + 1;
       const newTitle =
         targetTitle.slice(0, caretIndex) + currTitle.slice(caretIndex);
+
       this.#timer = setTimeout(() => {
         resolve({ newTitle, caretIndex });
       }, this.#delay);
-
       abortSignal.onabort = () => {
         console.log("TitleChanger.next abort signal triggered!");
 
