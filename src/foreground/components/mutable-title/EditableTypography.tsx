@@ -32,14 +32,14 @@ interface EditableTypographyProps {
   text: string;
   setText: Dispatch<SetStateAction<string>>;
   inputRef: RefObject<HTMLInputElement | null>;
-  onUserInput: () => void;
+  onUserInteraction: () => void;
 }
 
 export function EditableTypography({
   text,
   setText,
   inputRef,
-  onUserInput,
+  onUserInteraction,
 }: EditableTypographyProps) {
   const onChange = (value: string) => {
     setText(value);
@@ -53,7 +53,10 @@ export function EditableTypography({
       textAlign={"center"}
       onChange={(e: ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
-        onUserInput();
+        onUserInteraction();
+      }}
+      onClick={() => {
+        onUserInteraction();
       }}
       sx={{
         outlineWidth: 0,
