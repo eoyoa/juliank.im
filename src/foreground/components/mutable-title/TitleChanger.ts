@@ -14,6 +14,13 @@ interface TitleChange {
   caretIndex: number;
 }
 
+export class AbortError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AbortError";
+  }
+}
+
 export class TitleChanger {
   readonly titles: string[] = ["juliank.im", "i'm juliank."];
   #titleIndex = 0;
@@ -23,7 +30,7 @@ export class TitleChanger {
   #timer: number | undefined = undefined;
 
   next(currTitle: string, abortSignal: AbortSignal): Promise<TitleChange> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       if (this.#titleIndex >= this.titles.length)
         resolve({ newTitle: currTitle, caretIndex: currTitle.length });
 
@@ -42,9 +49,10 @@ export class TitleChanger {
         resolve({ newTitle, caretIndex });
       }, this.#delay);
       abortSignal.onabort = () => {
-        console.log("TitleChanger.next abort signal triggered!");
+        const err = new AbortError("TitleChanger.next abort signal triggered!");
 
         clearTimeout(this.#timer);
+        reject(err);
       };
     });
   }

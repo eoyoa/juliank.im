@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { EditableTypography } from "./EditableTypography.tsx";
-import { TitleChanger } from "./TitleChanger.ts";
+import { AbortError, TitleChanger } from "./TitleChanger.ts";
 
 function showCaretAtIndex(inputElement: HTMLInputElement, caretIndex: number) {
   inputElement.focus({ preventScroll: true });
@@ -41,7 +41,13 @@ export function MutableTitle() {
       }
     };
 
-    changeTitle().catch(console.error);
+    changeTitle().catch((err: unknown) => {
+      if (err instanceof AbortError) {
+        console.warn(err);
+        return;
+      }
+      console.error(err);
+    });
 
     return () => {
       abortController.abort();
