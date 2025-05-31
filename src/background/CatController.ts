@@ -1,9 +1,13 @@
-import type { TitleChange } from "../foreground/components/mutable-title/TitleChanger.ts";
+import {
+  type TitleChange,
+  TitleChanger,
+} from "../foreground/components/mutable-title/TitleChanger.ts";
 
 export class CatController {
   static #singleton: CatController = new CatController();
 
   #typeCallback: (() => void) | undefined;
+  #isDoneTyping: boolean = false;
 
   private constructor() {}
 
@@ -19,11 +23,21 @@ export class CatController {
     this.#typeCallback = undefined;
   }
 
+  get isDoneTyping() {
+    return this.#isDoneTyping;
+  }
+
   type(
     titleChange: TitleChange,
     resolve: (value: TitleChange | PromiseLike<TitleChange>) => void,
   ) {
     console.log("cat typing:", titleChange);
+    if (
+      titleChange.newTitle ===
+      TitleChanger.titles[TitleChanger.titles.length - 1]
+    ) {
+      this.#isDoneTyping = true;
+    }
     this.#typeCallback?.();
     resolve(titleChange);
   }

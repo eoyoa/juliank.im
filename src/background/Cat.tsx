@@ -33,7 +33,7 @@ export function Cat() {
   return (
     <>
       <Typography variant={"h1"} align={"right"}>
-        {isTyping ? "😼" : "😺"}
+        {catController.isDoneTyping ? "😸" : isTyping ? "😼" : "😺"}
       </Typography>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
