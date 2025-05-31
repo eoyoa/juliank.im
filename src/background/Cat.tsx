@@ -43,6 +43,7 @@ export function Cat() {
           },
           "& .MuiSnackbarContent-root": {
             minWidth: "fit-content",
+            flexGrow: 0,
           },
         }}
         open={open}
