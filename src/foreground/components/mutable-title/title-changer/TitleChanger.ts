@@ -19,12 +19,16 @@ export class TitleChanger {
   #timer: number | undefined = undefined;
   static readonly baseDelay = 500;
   static nextTitleDelay: number | undefined;
-  static initialDelay: number | undefined = TitleChanger.baseDelay;
+  static initialDelay: number | undefined = TitleChanger.baseDelay / 2;
 
   #catController: CatController = CatController.getController();
 
   static getDelay() {
-    return TitleChanger.baseDelay + (TitleChanger.nextTitleDelay ?? 0);
+    return (
+      (TitleChanger.initialDelay ?? 0) +
+      TitleChanger.baseDelay +
+      (TitleChanger.nextTitleDelay ?? 0)
+    );
   }
 
   next(currTitle: string, abortSignal: AbortSignal): Promise<TitleChange> {
