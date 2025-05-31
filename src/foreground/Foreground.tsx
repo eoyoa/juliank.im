@@ -1,11 +1,11 @@
 import { Stack } from "@mui/material";
 import { MutableTitle } from "./components/mutable-title/MutableTitle.tsx";
 import { LinkButtons } from "./components/link-buttons/LinkButtons.tsx";
-import { StackedBox } from "../common/StackedBox.tsx";
+import { Layer } from "../common/Layer.tsx";
 
 export function Foreground() {
   return (
-    <StackedBox zIndex={1}>
+    <Layer zIndex={1}>
       <Stack
         direction={"column"}
         width={"100%"}
@@ -16,6 +16,6 @@ export function Foreground() {
         <MutableTitle />
         <LinkButtons />
       </Stack>
-    </StackedBox>
+    </Layer>
   );
 }

@@ -1,10 +1,10 @@
-import { StackedBox } from "../common/StackedBox.tsx";
+import { Layer } from "../common/Layer.tsx";
 import { Typography } from "@mui/material";
 
 export function Background() {
   return (
-    <StackedBox>
+    <Layer>
       <Typography>background work in progress...</Typography>
-    </StackedBox>
+    </Layer>
   );
 }
