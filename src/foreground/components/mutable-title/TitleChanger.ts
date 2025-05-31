@@ -24,20 +24,20 @@ export class AbortError extends Error {
 }
 
 export class TitleChanger {
-  readonly titles: string[] = ["juliank.im", "i'm juliank."];
+  static readonly titles: string[] = ["juliank.im", "i'm juliank."];
   #titleIndex = 0;
 
   #timer: number | undefined = undefined;
-  readonly #delay = 750;
+  static readonly delay = 750;
 
-  #cat: CatController = CatController.getCat();
+  #cat: CatController = CatController.getController();
 
   next(currTitle: string, abortSignal: AbortSignal): Promise<TitleChange> {
     return new Promise((resolve, reject) => {
-      if (this.#titleIndex >= this.titles.length)
+      if (this.#titleIndex >= TitleChanger.titles.length)
         resolve({ newTitle: currTitle, caretIndex: currTitle.length });
 
-      const targetTitle = this.titles[this.#titleIndex];
+      const targetTitle = TitleChanger.titles[this.#titleIndex];
 
       if (currTitle === targetTitle) {
         this.#titleIndex++;
@@ -50,7 +50,7 @@ export class TitleChanger {
 
       this.#timer = setTimeout(() => {
         this.#cat.type({ newTitle, caretIndex }, resolve);
-      }, this.#delay);
+      }, TitleChanger.delay);
       abortSignal.onabort = () => {
         const err = new AbortError("TitleChanger.next abort signal triggered!");
 

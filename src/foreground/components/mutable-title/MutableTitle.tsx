@@ -9,7 +9,7 @@ function showCaretAtIndex(inputElement: HTMLInputElement, caretIndex: number) {
 
 export function MutableTitle() {
   const [titleChanger] = useState<TitleChanger>(() => new TitleChanger());
-  const [text, setText] = useState<string>(titleChanger.titles[0]);
+  const [text, setText] = useState<string>(TitleChanger.titles[0]);
 
   const [abortController] = useState(() => new AbortController());
 
