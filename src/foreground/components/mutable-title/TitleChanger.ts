@@ -24,7 +24,12 @@ export class AbortError extends Error {
 }
 
 export class TitleChanger {
-  static readonly titles: string[] = ["juliank.im", "i'm juliank."];
+  static readonly titles: string[] = [
+    "juliank.im",
+    "im.juliank",
+    "i'm julian k.",
+    "i'm julian k!",
+  ];
   #titleIndex = 0;
 
   #timer: number | undefined = undefined;
