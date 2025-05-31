@@ -73,7 +73,7 @@ export class TitleChanger {
         return;
       }
 
-      this.#edits.shift();
+      // const edit = this.#edits.shift();
       const caretIndex = getIndexToChange(currTitle, targetTitle) + 1;
       const newTitle =
         targetTitle.slice(0, caretIndex) + currTitle.slice(caretIndex);

@@ -1,9 +1,8 @@
 import { type Difference, getDiff } from "./editDistanceHelpers.ts";
 
 export interface Edit {
-  type: "ins" | "del" | "sub";
-  i: number;
-  letter?: string;
+  newTitle: string;
+  caretIndex: number;
 }
 
 // convert to a series of moves, then generate and consume in TitleChanger
@@ -15,6 +14,7 @@ export function getEdits(initial: string, target: string) {
   let diff: Difference | undefined;
   let i = curr.length;
   while ((diff = diffs.shift())) {
+    let push = true;
     switch (diff.type) {
       case "ins":
         i++;
@@ -22,11 +22,9 @@ export function getEdits(initial: string, target: string) {
           throw new Error("diff.letter is undefined for insertion move");
         }
         curr = curr.slice(0, i - 1) + diff.letter + curr.slice(i - 1);
-        edits.push({ type: "ins", i, letter: diff.letter });
         break;
       case "del":
         curr = curr.slice(0, i - 1) + curr.slice(i);
-        edits.push({ type: "del", i });
         break;
       case "sub": {
         if (!diff.letter) {
@@ -34,17 +32,21 @@ export function getEdits(initial: string, target: string) {
         }
         const prevCurr = curr;
         curr = curr.slice(0, i - 1) + diff.letter + curr.slice(i);
-        // skip useless sub
-        if (curr !== prevCurr) {
-          edits.push({ type: "sub", i, letter: diff.letter });
-        }
+        push = curr !== prevCurr;
         break;
       }
     }
+    if (push) {
+      edits.push({ newTitle: curr, caretIndex: i });
+    }
     i--;
   }
-  console.log(curr === target);
-  console.log(edits);
+
+  const editsCopy = Object.assign([], edits);
+  const correct = edits[edits.length - 1].newTitle === target;
+  if (!correct) {
+    console.error(correct, editsCopy);
+  } else console.log(correct, editsCopy);
 
   return edits;
 }
