@@ -1,4 +1,4 @@
-import { Cat } from "../../../background/Cat.ts";
+import { CatController } from "../../../background/CatController.ts";
 
 function getIndexToChange(curr: string, target: string) {
   let i = 0;
@@ -30,7 +30,7 @@ export class TitleChanger {
   #timer: number | undefined = undefined;
   readonly #delay = 750;
 
-  #cat: Cat = Cat.getCat();
+  #cat: CatController = CatController.getCat();
 
   next(currTitle: string, abortSignal: AbortSignal): Promise<TitleChange> {
     return new Promise((resolve, reject) => {
