@@ -1,7 +1,7 @@
 import {
   type TitleChange,
   TitleChanger,
-} from "../foreground/components/mutable-title/TitleChanger.ts";
+} from "../foreground/components/mutable-title/title-changer/TitleChanger.ts";
 
 export class CatController {
   static #singleton: CatController = new CatController();

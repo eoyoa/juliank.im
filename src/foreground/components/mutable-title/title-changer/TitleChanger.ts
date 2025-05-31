@@ -1,4 +1,4 @@
-import { CatController } from "../../../background/CatController.ts";
+import { CatController } from "../../../../background/CatController.ts";
 
 function getIndexToChange(curr: string, target: string) {
   let i = 0;

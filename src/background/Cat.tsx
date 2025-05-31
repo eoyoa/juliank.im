@@ -1,7 +1,7 @@
 import { Snackbar, SnackbarContent, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { CatController } from "./CatController.ts";
-import { TitleChanger } from "../foreground/components/mutable-title/TitleChanger.ts";
+import { TitleChanger } from "../foreground/components/mutable-title/title-changer/TitleChanger.ts";
 
 export function Cat() {
   const [catController] = useState(() => CatController.getController());
