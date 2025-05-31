@@ -38,7 +38,9 @@ export class CatController {
     ) {
       this.#isDoneTyping = true;
     }
-    this.#typeCallback?.();
+    if (titleChange.changeType === "text") {
+      this.#typeCallback?.();
+    }
     resolve(titleChange);
   }
 }

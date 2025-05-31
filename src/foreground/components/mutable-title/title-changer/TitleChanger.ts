@@ -20,8 +20,9 @@ export class TitleChanger {
 
   #timer: number | undefined = undefined;
   static readonly #baseDelay = 500;
-  static #nextTitleDelay: number | undefined;
-  static #initialDelay: number | undefined = TitleChanger.#baseDelay / 2;
+  static #nextTitleDelay: number = 0;
+  static #initialDelay = TitleChanger.#baseDelay / 2;
+  static #caretChangeDecrease = TitleChanger.#baseDelay / 2;
 
   #catController: CatController = CatController.getController();
 
@@ -29,9 +30,10 @@ export class TitleChanger {
 
   static getDelay() {
     return (
-      (TitleChanger.#initialDelay ?? 0) +
+      TitleChanger.#initialDelay +
       TitleChanger.#baseDelay +
-      (TitleChanger.#nextTitleDelay ?? 0)
+      TitleChanger.#nextTitleDelay -
+      TitleChanger.#caretChangeDecrease
     );
   }
 
@@ -88,14 +90,24 @@ export class TitleChanger {
         }
         const { newTitle, caretIndex, changeType } = edit;
 
+        if (changeType === "caret") {
+          TitleChanger.#caretChangeDecrease = TitleChanger.#baseDelay / 2;
+        }
         this.#catController.type({ newTitle, caretIndex, changeType }, resolve);
-        if (TitleChanger.#initialDelay) {
-          TitleChanger.#initialDelay = undefined;
-        }
-        if (TitleChanger.#nextTitleDelay) {
-          TitleChanger.#nextTitleDelay = undefined;
-        }
+        this.#resetDelays();
       }, TitleChanger.getDelay());
     });
+  }
+
+  #resetDelays() {
+    if (TitleChanger.#initialDelay > 0) {
+      TitleChanger.#initialDelay = 0;
+    }
+    if (TitleChanger.#nextTitleDelay > 0) {
+      TitleChanger.#nextTitleDelay = 0;
+    }
+    if (TitleChanger.#caretChangeDecrease > 0) {
+      TitleChanger.#caretChangeDecrease = 0;
+    }
   }
 }
