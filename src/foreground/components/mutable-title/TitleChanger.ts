@@ -30,18 +30,25 @@ export class TitleChanger {
   #timer: number | undefined = undefined;
   static readonly delay = 750;
 
-  #cat: CatController = CatController.getController();
+  #catController: CatController = CatController.getController();
 
   next(currTitle: string, abortSignal: AbortSignal): Promise<TitleChange> {
     return new Promise((resolve, reject) => {
-      if (this.#titleIndex >= TitleChanger.titles.length)
+      if (this.#titleIndex >= TitleChanger.titles.length) {
+        console.warn("no more titles! final change:", {
+          newTitle: currTitle,
+          caretIndex: currTitle.length,
+        });
         resolve({ newTitle: currTitle, caretIndex: currTitle.length });
+      }
 
       const targetTitle = TitleChanger.titles[this.#titleIndex];
 
       if (currTitle === targetTitle) {
         this.#titleIndex++;
-        void this.next(currTitle, abortSignal).then(resolve);
+        console.log("cycling titles...");
+        this.next(currTitle, abortSignal).then(resolve).catch(reject);
+        return;
       }
 
       const caretIndex = getIndexToChange(currTitle, targetTitle) + 1;
@@ -49,10 +56,12 @@ export class TitleChanger {
         targetTitle.slice(0, caretIndex) + currTitle.slice(caretIndex);
 
       this.#timer = setTimeout(() => {
-        this.#cat.type({ newTitle, caretIndex }, resolve);
+        this.#catController.type({ newTitle, caretIndex }, resolve);
       }, TitleChanger.delay);
       abortSignal.onabort = () => {
-        const err = new AbortError("TitleChanger.next abort signal triggered!");
+        const err = new AbortError(
+          "TitleChanger.next abort signal triggered! clearing timer...",
+        );
 
         clearTimeout(this.#timer);
         reject(err);

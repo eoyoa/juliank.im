@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Snackbar, SnackbarContent, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { CatController } from "./CatController.ts";
 import { TitleChanger } from "../foreground/components/mutable-title/TitleChanger.ts";
@@ -6,16 +6,20 @@ import { TitleChanger } from "../foreground/components/mutable-title/TitleChange
 export function Cat() {
   const [catController] = useState(() => CatController.getController());
   const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleClose = () => {
+    setIsTyping(false);
+    setOpen(false);
+  };
 
   useEffect(() => {
     let timer: number | undefined;
 
     const handleType = () => {
-      console.log("cat typing:");
       setIsTyping(true);
-      timer = setTimeout(() => {
-        setIsTyping(false);
-      }, TitleChanger.delay / 2);
+      setOpen(true);
+      console.log("animated cat");
     };
 
     catController.attachTypeCallback(handleType);
@@ -27,8 +31,26 @@ export function Cat() {
   }, [catController]);
 
   return (
-    <Typography variant={"h1"} align={"right"}>
-      {isTyping ? "😼" : "😺"}
-    </Typography>
+    <>
+      <Typography variant={"h1"} align={"right"}>
+        {isTyping ? "😼" : "😺"}
+      </Typography>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        sx={{
+          "&.MuiSnackbar-anchorOriginBottomRight": {
+            bottom: "100px",
+          },
+          "& .MuiSnackbarContent-root": {
+            minWidth: "fit-content",
+          },
+        }}
+        open={open}
+        onClose={handleClose}
+        autoHideDuration={TitleChanger.delay / 3}
+      >
+        <SnackbarContent message={"type..."} />
+      </Snackbar>
+    </>
   );
 }

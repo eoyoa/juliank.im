@@ -23,6 +23,7 @@ export class CatController {
     titleChange: TitleChange,
     resolve: (value: TitleChange | PromiseLike<TitleChange>) => void,
   ) {
+    console.log("cat typing:", titleChange);
     this.#typeCallback?.();
     resolve(titleChange);
   }
