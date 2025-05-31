@@ -34,6 +34,7 @@ export function getEdits(initial: string, target: string) {
         }
         curr = curr.slice(0, i - 1) + diff.letter + curr.slice(i);
         // TODO: if this is an actual substitution, we should do a deletion then an insertion
+        // TODO: or maybe a selection?
         push = curr !== prevCurr;
         break;
       }
