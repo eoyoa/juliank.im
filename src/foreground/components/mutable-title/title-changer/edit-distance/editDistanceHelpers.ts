@@ -16,7 +16,7 @@ interface DPEntry {
 
 function editDistanceMatrix(a: string, b: string) {
   const dp: DPEntry[][] = Array.from(Array<DPEntry>(a.length + 1), () =>
-    Array<DPEntry>(b.length + 1).fill({ dist: Infinity, type: "ins" }),
+    Array<DPEntry>(b.length + 1).fill({ dist: 0, type: "ins" }),
   );
 
   for (let i = 1; i <= a.length; i++) {

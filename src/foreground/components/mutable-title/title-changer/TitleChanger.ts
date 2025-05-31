@@ -60,15 +60,16 @@ export class TitleChanger {
 
       const targetTitle = TitleChanger.titles[this.#titleIndex];
 
-      if (this.#edits.length === 0) {
-        this.generateEdits(currTitle, targetTitle);
-        this.next(currTitle, abortSignal).then(resolve).catch(reject);
-        return;
-      }
       if (currTitle === targetTitle) {
         console.log("cycling titles...");
         this.#titleIndex++;
         TitleChanger.#nextTitleDelay = TitleChanger.#baseDelay;
+        this.next(currTitle, abortSignal).then(resolve).catch(reject);
+        return;
+      }
+      if (this.#edits.length === 0) {
+        console.log("generating edits...");
+        this.generateEdits(currTitle, targetTitle);
         this.next(currTitle, abortSignal).then(resolve).catch(reject);
         return;
       }

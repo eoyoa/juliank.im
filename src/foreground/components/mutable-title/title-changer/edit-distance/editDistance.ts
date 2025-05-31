@@ -16,6 +16,8 @@ export function getEdits(initial: string, target: string) {
   while ((diff = diffs.shift())) {
     let push = true;
     let caretIndex = i;
+    const prevCurr = curr;
+
     switch (diff.type) {
       case "ins":
         i++;
@@ -33,23 +35,25 @@ export function getEdits(initial: string, target: string) {
         if (!diff.letter) {
           throw new Error("diff.letter is undefined for insertion move");
         }
-        const prevCurr = curr;
         curr = curr.slice(0, i - 1) + diff.letter + curr.slice(i);
         push = curr !== prevCurr;
         break;
       }
     }
     if (push) {
+      // edits.push({ newTitle: prevCurr, caretIndex });
       edits.push({ newTitle: curr, caretIndex });
     }
     i--;
   }
 
-  const editsCopy = Object.assign([], edits);
-  const correct = edits[edits.length - 1].newTitle === target;
-  if (!correct) {
-    console.error(correct, editsCopy);
-  } else console.log(correct, editsCopy);
+  if (edits.length > 0) {
+    const editsCopy = Object.assign([], edits);
+    const correct = edits[edits.length - 1].newTitle === target;
+    if (!correct) {
+      console.error(correct, editsCopy);
+    } else console.log(correct, editsCopy);
+  }
 
   return edits;
 }
