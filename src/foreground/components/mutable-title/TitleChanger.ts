@@ -26,7 +26,8 @@ export class AbortError extends Error {
 export class TitleChanger {
   static readonly titles: string[] = [
     "juliank.im",
-    "im.juliank",
+    "julian kim.",
+    "im julian k.",
     "i'm julian k.",
     "i'm julian k!",
   ];
