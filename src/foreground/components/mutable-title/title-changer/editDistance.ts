@@ -105,6 +105,7 @@ export function mappedEdits(curr: string, target: string): EditDistanceMove[] {
   });
 }
 
+// TODO: convert to series of moves, then just generate + consume in TitleChanger
 export function printEdits(
   edits: EditDistanceMove[],
   initial: string,

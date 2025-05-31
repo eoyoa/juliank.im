@@ -52,6 +52,9 @@ export class TitleChanger {
         return;
       }
 
+      // const edits = mappedEdits(currTitle, targetTitle);
+      // printEdits(edits, currTitle, targetTitle);
+
       const caretIndex = getIndexToChange(currTitle, targetTitle) + 1;
       const newTitle =
         targetTitle.slice(0, caretIndex) + currTitle.slice(caretIndex);
