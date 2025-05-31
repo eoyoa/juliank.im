@@ -33,17 +33,23 @@ export function getEdits(initial: string, target: string) {
           throw new Error("diff.letter is undefined for substitution move");
         }
         curr = curr.slice(0, i - 1) + diff.letter + curr.slice(i);
+        // TODO: if this is an actual substitution, we should do a deletion then an insertion
         push = curr !== prevCurr;
         break;
       }
     }
 
     if (push) {
-      edits.push({
-        newTitle: prevCurr,
-        caretIndex,
-        changeType: "caret",
-      });
+      if (
+        edits.length === 0 ||
+        edits[edits.length - 1].caretIndex !== caretIndex
+      ) {
+        edits.push({
+          newTitle: prevCurr,
+          caretIndex,
+          changeType: "caret",
+        });
+      }
       edits.push({
         newTitle: curr,
         caretIndex: del ? caretIndex - 1 : i,
