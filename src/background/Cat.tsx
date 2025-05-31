@@ -48,7 +48,7 @@ export function Cat() {
         }}
         open={open}
         onClose={handleClose}
-        autoHideDuration={TitleChanger.delay / 3}
+        autoHideDuration={TitleChanger.getDelay() / 3}
       >
         <SnackbarContent message={"type..."} />
       </Snackbar>

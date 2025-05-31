@@ -34,9 +34,15 @@ export class TitleChanger {
   #titleIndex = 0;
 
   #timer: number | undefined = undefined;
-  static readonly delay = 500;
+  static readonly baseDelay = 500;
+  static nextTitleDelay: number | undefined;
+  static initialDelay: number | undefined = TitleChanger.baseDelay;
 
   #catController: CatController = CatController.getController();
+
+  static getDelay() {
+    return TitleChanger.baseDelay + (TitleChanger.nextTitleDelay ?? 0);
+  }
 
   next(currTitle: string, abortSignal: AbortSignal): Promise<TitleChange> {
     return new Promise((resolve, reject) => {
@@ -51,8 +57,9 @@ export class TitleChanger {
       const targetTitle = TitleChanger.titles[this.#titleIndex];
 
       if (currTitle === targetTitle) {
-        this.#titleIndex++;
         console.log("cycling titles...");
+        this.#titleIndex++;
+        TitleChanger.nextTitleDelay = TitleChanger.baseDelay;
         this.next(currTitle, abortSignal).then(resolve).catch(reject);
         return;
       }
@@ -63,7 +70,13 @@ export class TitleChanger {
 
       this.#timer = setTimeout(() => {
         this.#catController.type({ newTitle, caretIndex }, resolve);
-      }, TitleChanger.delay);
+        if (TitleChanger.initialDelay) {
+          TitleChanger.initialDelay = undefined;
+        }
+        if (TitleChanger.nextTitleDelay) {
+          TitleChanger.nextTitleDelay = undefined;
+        }
+      }, TitleChanger.getDelay());
       abortSignal.onabort = () => {
         const err = new AbortError(
           "TitleChanger.next abort signal triggered! clearing timer...",
