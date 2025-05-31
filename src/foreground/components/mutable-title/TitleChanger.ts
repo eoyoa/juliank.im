@@ -33,7 +33,7 @@ export class TitleChanger {
   #titleIndex = 0;
 
   #timer: number | undefined = undefined;
-  static readonly delay = 750;
+  static readonly delay = 500;
 
   #catController: CatController = CatController.getController();
 
