@@ -40,6 +40,15 @@ export class TitleChanger {
 
   next(currTitle: string, abortSignal: AbortSignal): Promise<TitleChange> {
     return new Promise((resolve, reject) => {
+      abortSignal.onabort = () => {
+        const err = new AbortError(
+          "TitleChanger.next abort signal triggered! clearing timer...",
+        );
+
+        clearTimeout(this.#timer);
+        reject(err);
+      };
+
       if (this.#titleIndex >= TitleChanger.titles.length) {
         console.warn("no more titles! final change:", {
           newTitle: currTitle,
@@ -53,6 +62,7 @@ export class TitleChanger {
 
       if (this.#edits.length === 0) {
         this.generateEdits(currTitle, targetTitle);
+        this.next(currTitle, abortSignal).then(resolve).catch(reject);
         return;
       }
       if (currTitle === targetTitle) {
@@ -63,8 +73,7 @@ export class TitleChanger {
         return;
       }
 
-      // getEdits(currTitle, targetTitle);
-
+      this.#edits.shift();
       const caretIndex = getIndexToChange(currTitle, targetTitle) + 1;
       const newTitle =
         targetTitle.slice(0, caretIndex) + currTitle.slice(caretIndex);
@@ -78,15 +87,6 @@ export class TitleChanger {
           TitleChanger.#nextTitleDelay = undefined;
         }
       }, TitleChanger.getDelay());
-
-      abortSignal.onabort = () => {
-        const err = new AbortError(
-          "TitleChanger.next abort signal triggered! clearing timer...",
-        );
-
-        clearTimeout(this.#timer);
-        reject(err);
-      };
     });
   }
 }
