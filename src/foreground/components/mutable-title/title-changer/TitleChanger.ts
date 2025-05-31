@@ -1,5 +1,5 @@
 import { CatController } from "../../../../background/CatController.ts";
-import { AbortError, getIndexToChange } from "./titleHelpers.ts";
+import { AbortError } from "./titleHelpers.ts";
 import { type Edit, getEdits } from "./edit-distance/editDistance.ts";
 
 export interface TitleChange {
@@ -73,12 +73,15 @@ export class TitleChanger {
         return;
       }
 
-      // const edit = this.#edits.shift();
-      const caretIndex = getIndexToChange(currTitle, targetTitle) + 1;
-      const newTitle =
-        targetTitle.slice(0, caretIndex) + currTitle.slice(caretIndex);
-
       this.#timer = setTimeout(() => {
+        const edit = this.#edits.shift();
+        if (!edit) {
+          const err = new Error("edit is undefined!");
+          reject(err);
+          return;
+        }
+        const { newTitle, caretIndex } = edit;
+
         this.#catController.type({ newTitle, caretIndex }, resolve);
         if (TitleChanger.#initialDelay) {
           TitleChanger.#initialDelay = undefined;

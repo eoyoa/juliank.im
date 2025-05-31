@@ -15,6 +15,7 @@ export function getEdits(initial: string, target: string) {
   let i = curr.length;
   while ((diff = diffs.shift())) {
     let push = true;
+    let caretIndex = i;
     switch (diff.type) {
       case "ins":
         i++;
@@ -22,9 +23,11 @@ export function getEdits(initial: string, target: string) {
           throw new Error("diff.letter is undefined for insertion move");
         }
         curr = curr.slice(0, i - 1) + diff.letter + curr.slice(i - 1);
+        caretIndex = i;
         break;
       case "del":
         curr = curr.slice(0, i - 1) + curr.slice(i);
+        caretIndex = i - 1;
         break;
       case "sub": {
         if (!diff.letter) {
@@ -37,7 +40,7 @@ export function getEdits(initial: string, target: string) {
       }
     }
     if (push) {
-      edits.push({ newTitle: curr, caretIndex: i });
+      edits.push({ newTitle: curr, caretIndex });
     }
     i--;
   }
