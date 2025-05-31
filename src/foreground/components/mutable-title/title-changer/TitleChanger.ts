@@ -1,10 +1,11 @@
 import { CatController } from "../../../../background/CatController.ts";
 import { AbortError } from "./titleHelpers.ts";
-import { type Edit, getEdits } from "./edit-distance/editDistance.ts";
+import { getEdits } from "./edit-distance/editDistance.ts";
 
 export interface TitleChange {
   newTitle: string;
   caretIndex: number;
+  changeType: "caret" | "text";
 }
 
 export class TitleChanger {
@@ -24,7 +25,7 @@ export class TitleChanger {
 
   #catController: CatController = CatController.getController();
 
-  #edits: Edit[] = [];
+  #edits: TitleChange[] = [];
 
   static getDelay() {
     return (
@@ -54,7 +55,11 @@ export class TitleChanger {
           newTitle: currTitle,
           caretIndex: currTitle.length,
         });
-        resolve({ newTitle: currTitle, caretIndex: currTitle.length });
+        resolve({
+          newTitle: currTitle,
+          caretIndex: currTitle.length,
+          changeType: "text",
+        });
         return;
       }
 
@@ -81,9 +86,9 @@ export class TitleChanger {
           reject(err);
           return;
         }
-        const { newTitle, caretIndex } = edit;
+        const { newTitle, caretIndex, changeType } = edit;
 
-        this.#catController.type({ newTitle, caretIndex }, resolve);
+        this.#catController.type({ newTitle, caretIndex, changeType }, resolve);
         if (TitleChanger.#initialDelay) {
           TitleChanger.#initialDelay = undefined;
         }

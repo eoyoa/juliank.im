@@ -12,6 +12,8 @@ export function MutableTitle() {
   const [titleChanger] = useState<TitleChanger>(() => new TitleChanger());
   const [text, setText] = useState<string>(TitleChanger.titles[0]);
 
+  const [lastChange, setLastChange] = useState<"caret" | "text">("text");
+
   const [abortController] = useState(() => new AbortController());
 
   // TODO: this state variables can probably be abstracted away when cat
@@ -28,11 +30,13 @@ export function MutableTitle() {
     if (!isAnimating) return;
 
     const changeTitle = async () => {
-      const { newTitle, caretIndex } = await titleChanger.next(
+      console.log("changing title, current:", text, lastChange);
+      const { newTitle, caretIndex, changeType } = await titleChanger.next(
         text,
         abortController.signal,
       );
       setText(newTitle);
+      setLastChange(changeType);
 
       // hack to update dom immediately
       // avoids caret flickering
@@ -53,7 +57,7 @@ export function MutableTitle() {
     return () => {
       abortController.abort();
     };
-  }, [abortController, isAnimating, text, titleChanger]);
+  }, [abortController, isAnimating, text, titleChanger, lastChange]);
 
   return (
     <EditableTypography

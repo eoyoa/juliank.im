@@ -1,14 +1,10 @@
 import { type Difference, getDiff } from "./editDistanceHelpers.ts";
-
-export interface Edit {
-  newTitle: string;
-  caretIndex: number;
-}
+import type { TitleChange } from "../TitleChanger.ts";
 
 // convert to a series of moves, then generate and consume in TitleChanger
 export function getEdits(initial: string, target: string) {
   const diffs = getDiff(initial, target);
-  const edits: Edit[] = [];
+  const edits: TitleChange[] = [];
 
   let curr = initial;
   let diff: Difference | undefined;
@@ -17,6 +13,7 @@ export function getEdits(initial: string, target: string) {
     let push = true;
     let caretIndex = i;
     const prevCurr = curr;
+    let del = false;
 
     switch (diff.type) {
       case "ins":
@@ -25,25 +22,35 @@ export function getEdits(initial: string, target: string) {
           throw new Error("diff.letter is undefined for insertion move");
         }
         curr = curr.slice(0, i - 1) + diff.letter + curr.slice(i - 1);
-        caretIndex = i;
+        caretIndex = i - 1;
         break;
       case "del":
+        del = true;
         curr = curr.slice(0, i - 1) + curr.slice(i);
-        caretIndex = i - 1;
         break;
       case "sub": {
         if (!diff.letter) {
-          throw new Error("diff.letter is undefined for insertion move");
+          throw new Error("diff.letter is undefined for substitution move");
         }
         curr = curr.slice(0, i - 1) + diff.letter + curr.slice(i);
         push = curr !== prevCurr;
         break;
       }
     }
+
     if (push) {
-      // edits.push({ newTitle: prevCurr, caretIndex });
-      edits.push({ newTitle: curr, caretIndex });
+      edits.push({
+        newTitle: prevCurr,
+        caretIndex,
+        changeType: "caret",
+      });
+      edits.push({
+        newTitle: curr,
+        caretIndex: del ? caretIndex - 1 : i,
+        changeType: "text",
+      });
     }
+
     i--;
   }
 
