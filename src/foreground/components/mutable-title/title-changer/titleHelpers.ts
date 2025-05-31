@@ -1,3 +1,10 @@
+export class AbortError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AbortError";
+  }
+}
+
 export function getIndexToChange(curr: string, target: string) {
   let i = 0;
 
@@ -7,11 +14,4 @@ export function getIndexToChange(curr: string, target: string) {
     }
   }
   return i;
-}
-
-export class AbortError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "AbortError";
-  }
 }
