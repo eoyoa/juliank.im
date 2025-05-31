@@ -1,6 +1,6 @@
 import { type Difference, getDiff } from "./editDistanceHelpers.ts";
 
-interface Edit {
+export interface Edit {
   type: "ins" | "del" | "sub";
   i: number;
   letter?: string;

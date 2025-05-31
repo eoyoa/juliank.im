@@ -1,5 +1,6 @@
 import { CatController } from "../../../../background/CatController.ts";
 import { AbortError, getIndexToChange } from "./titleHelpers.ts";
+import { type Edit, getEdits } from "./edit-distance/editDistance.ts";
 
 export interface TitleChange {
   newTitle: string;
@@ -23,12 +24,18 @@ export class TitleChanger {
 
   #catController: CatController = CatController.getController();
 
+  #edits: Edit[] = [];
+
   static getDelay() {
     return (
       (TitleChanger.#initialDelay ?? 0) +
       TitleChanger.#baseDelay +
       (TitleChanger.#nextTitleDelay ?? 0)
     );
+  }
+
+  generateEdits(initial: string, target: string) {
+    this.#edits = getEdits(initial, target);
   }
 
   next(currTitle: string, abortSignal: AbortSignal): Promise<TitleChange> {
@@ -44,6 +51,10 @@ export class TitleChanger {
 
       const targetTitle = TitleChanger.titles[this.#titleIndex];
 
+      if (this.#edits.length === 0) {
+        this.generateEdits(currTitle, targetTitle);
+        return;
+      }
       if (currTitle === targetTitle) {
         console.log("cycling titles...");
         this.#titleIndex++;
