@@ -1,3 +1,5 @@
+import { Cat } from "../../../background/Cat.ts";
+
 function getIndexToChange(curr: string, target: string) {
   let i = 0;
 
@@ -9,7 +11,7 @@ function getIndexToChange(curr: string, target: string) {
   return i;
 }
 
-interface TitleChange {
+export interface TitleChange {
   newTitle: string;
   caretIndex: number;
 }
@@ -25,9 +27,10 @@ export class TitleChanger {
   readonly titles: string[] = ["juliank.im", "i'm juliank."];
   #titleIndex = 0;
 
+  #timer: number | undefined = undefined;
   readonly #delay = 750;
 
-  #timer: number | undefined = undefined;
+  #cat: Cat = Cat.getCat();
 
   next(currTitle: string, abortSignal: AbortSignal): Promise<TitleChange> {
     return new Promise((resolve, reject) => {
@@ -46,7 +49,7 @@ export class TitleChanger {
         targetTitle.slice(0, caretIndex) + currTitle.slice(caretIndex);
 
       this.#timer = setTimeout(() => {
-        resolve({ newTitle, caretIndex });
+        this.#cat.type({ newTitle, caretIndex }, resolve);
       }, this.#delay);
       abortSignal.onabort = () => {
         const err = new AbortError("TitleChanger.next abort signal triggered!");
