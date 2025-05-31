@@ -13,7 +13,6 @@ export class TitleChanger {
     "juliank.im",
     "julian kim.",
     "im julian k.",
-    "i'm julian k.",
     "i'm julian k!",
   ];
   #titleIndex = 0;
