@@ -30,7 +30,7 @@ export function MutableTitle() {
     if (!isAnimating) return;
 
     const changeTitle = async () => {
-      console.log("changing title, current:", text, lastChange);
+      console.debug("changing title, current:", text, lastChange);
       const { newTitle, caretIndex, changeType } = await titleChanger.next(
         text,
         abortController.signal,

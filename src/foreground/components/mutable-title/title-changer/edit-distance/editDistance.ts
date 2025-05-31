@@ -59,7 +59,7 @@ export function getEdits(initial: string, target: string) {
     const correct = edits[edits.length - 1].newTitle === target;
     if (!correct) {
       console.error(correct, editsCopy);
-    } else console.log(correct, editsCopy);
+    } else console.debug(correct, editsCopy);
   }
 
   return edits;

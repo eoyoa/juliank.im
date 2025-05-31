@@ -68,14 +68,14 @@ export class TitleChanger {
       const targetTitle = TitleChanger.titles[this.#titleIndex];
 
       if (currTitle === targetTitle) {
-        console.log("cycling titles...");
+        console.debug("cycling titles...");
         this.#titleIndex++;
         TitleChanger.#nextTitleDelay = TitleChanger.#baseDelay;
         this.next(currTitle, abortSignal).then(resolve).catch(reject);
         return;
       }
       if (this.#edits.length === 0) {
-        console.log("generating edits...");
+        console.debug("generating edits...");
         this.generateEdits(currTitle, targetTitle);
         this.next(currTitle, abortSignal).then(resolve).catch(reject);
         return;

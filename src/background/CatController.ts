@@ -31,7 +31,7 @@ export class CatController {
     titleChange: TitleChange,
     resolve: (value: TitleChange | PromiseLike<TitleChange>) => void,
   ) {
-    console.log("cat typing:", titleChange);
+    console.debug("cat typing:", titleChange);
     if (
       titleChange.newTitle ===
       TitleChanger.titles[TitleChanger.titles.length - 1]

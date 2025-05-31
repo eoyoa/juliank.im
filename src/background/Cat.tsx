@@ -19,7 +19,7 @@ export function Cat() {
     const handleType = () => {
       setIsTyping(true);
       setOpen(true);
-      console.log("animated cat");
+      console.debug("animated cat");
     };
 
     catController.attachTypeCallback(handleType);
