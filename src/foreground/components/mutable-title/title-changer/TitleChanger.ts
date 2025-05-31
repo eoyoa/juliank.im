@@ -17,17 +17,17 @@ export class TitleChanger {
   #titleIndex = 0;
 
   #timer: number | undefined = undefined;
-  static readonly baseDelay = 500;
-  static nextTitleDelay: number | undefined;
-  static initialDelay: number | undefined = TitleChanger.baseDelay / 2;
+  static readonly #baseDelay = 500;
+  static #nextTitleDelay: number | undefined;
+  static #initialDelay: number | undefined = TitleChanger.#baseDelay / 2;
 
   #catController: CatController = CatController.getController();
 
   static getDelay() {
     return (
-      (TitleChanger.initialDelay ?? 0) +
-      TitleChanger.baseDelay +
-      (TitleChanger.nextTitleDelay ?? 0)
+      (TitleChanger.#initialDelay ?? 0) +
+      TitleChanger.#baseDelay +
+      (TitleChanger.#nextTitleDelay ?? 0)
     );
   }
 
@@ -46,7 +46,7 @@ export class TitleChanger {
       if (currTitle === targetTitle) {
         console.log("cycling titles...");
         this.#titleIndex++;
-        TitleChanger.nextTitleDelay = TitleChanger.baseDelay;
+        TitleChanger.#nextTitleDelay = TitleChanger.#baseDelay;
         this.next(currTitle, abortSignal).then(resolve).catch(reject);
         return;
       }
@@ -57,11 +57,11 @@ export class TitleChanger {
 
       this.#timer = setTimeout(() => {
         this.#catController.type({ newTitle, caretIndex }, resolve);
-        if (TitleChanger.initialDelay) {
-          TitleChanger.initialDelay = undefined;
+        if (TitleChanger.#initialDelay) {
+          TitleChanger.#initialDelay = undefined;
         }
-        if (TitleChanger.nextTitleDelay) {
-          TitleChanger.nextTitleDelay = undefined;
+        if (TitleChanger.#nextTitleDelay) {
+          TitleChanger.#nextTitleDelay = undefined;
         }
       }, TitleChanger.getDelay());
       abortSignal.onabort = () => {
