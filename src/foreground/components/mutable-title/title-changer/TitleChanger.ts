@@ -39,6 +39,7 @@ export class TitleChanger {
           caretIndex: currTitle.length,
         });
         resolve({ newTitle: currTitle, caretIndex: currTitle.length });
+        return;
       }
 
       const targetTitle = TitleChanger.titles[this.#titleIndex];
@@ -64,6 +65,7 @@ export class TitleChanger {
           TitleChanger.#nextTitleDelay = undefined;
         }
       }, TitleChanger.getDelay());
+
       abortSignal.onabort = () => {
         const err = new AbortError(
           "TitleChanger.next abort signal triggered! clearing timer...",
