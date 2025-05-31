@@ -15,7 +15,7 @@ const theme = responsiveFontSizes(
     },
   }),
   {
-    factor: 2.75,
+    factor: 3,
   },
 );
 
