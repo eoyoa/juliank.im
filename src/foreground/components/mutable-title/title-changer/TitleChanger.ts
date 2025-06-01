@@ -21,7 +21,7 @@ export class TitleChanger {
   static readonly #baseDelay = 500;
   static #nextTitleDelay: number = 0;
   static #initialDelay = TitleChanger.#baseDelay / 2;
-  static #caretChangeDecrease = TitleChanger.#baseDelay / 2;
+  static #caretChangeDecrease = TitleChanger.#baseDelay * 0.75;
 
   #catController: CatController = CatController.getController();
 
