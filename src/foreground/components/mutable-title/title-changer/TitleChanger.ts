@@ -22,6 +22,7 @@ export class TitleChanger {
   static #nextTitleDelay: number = 0;
   static #initialDelay = TitleChanger.#baseDelay / 2;
   static #caretChangeDecrease = TitleChanger.#baseDelay * 0.75;
+  static readonly resumeDelay = 500;
 
   #catController: CatController = CatController.getController();
 
@@ -40,15 +41,30 @@ export class TitleChanger {
     this.#edits = getEdits(initial, target);
   }
 
+  clearEdits() {
+    this.#edits = [];
+  }
+
   next(currTitle: string, abortSignal: AbortSignal): Promise<TitleChange> {
     return new Promise((resolve, reject) => {
-      abortSignal.onabort = () => {
-        const err = new AbortError(
-          "TitleChanger.next abort signal triggered! clearing timer...",
-        );
+      // Set up abort handler only once per promise, and only if we're going to use a timer
+      const setupAbortHandler = () => {
+        if (abortSignal.aborted) {
+          const err = new AbortError("TitleChanger.next was already aborted!");
+          reject(err);
+          return false;
+        }
 
-        clearTimeout(this.#timer);
-        reject(err);
+        const abortHandler = () => {
+          const err = new AbortError(
+            "TitleChanger.next abort signal triggered! clearing timer...",
+          );
+          clearTimeout(this.#timer);
+          reject(err);
+        };
+
+        abortSignal.addEventListener("abort", abortHandler, { once: true });
+        return true;
       };
 
       if (this.#titleIndex >= TitleChanger.titles.length) {
@@ -77,6 +93,10 @@ export class TitleChanger {
         console.debug("generating edits...");
         this.generateEdits(currTitle, targetTitle);
         this.next(currTitle, abortSignal).then(resolve).catch(reject);
+        return;
+      }
+
+      if (!setupAbortHandler()) {
         return;
       }
 

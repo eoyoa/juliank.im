@@ -14,8 +14,6 @@ export function MutableTitle() {
 
   const [lastChange, setLastChange] = useState<"caret" | "text">("text");
 
-  const [abortController] = useState(() => new AbortController());
-
   // TODO: this state variables can probably be abstracted away when cat
   const [isAnimating, setIsAnimating] = useState<boolean>(true);
 
@@ -26,8 +24,18 @@ export function MutableTitle() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     // TODO: if not animating, go back to animating eventually
-    if (!isAnimating) return;
+    // let resumeTimer: number | undefined;
+    if (!isAnimating) {
+      // resumeTimer = setTimeout(() => {
+      //   titleChanger.clearEdits();
+      //   setIsAnimating(true);
+      // }, TitleChanger.resumeDelay);
+
+      return;
+    }
 
     const changeTitle = async () => {
       console.debug("changing title, current:", text, lastChange);
@@ -56,8 +64,9 @@ export function MutableTitle() {
 
     return () => {
       abortController.abort();
+      // clearTimeout(resumeTimer);
     };
-  }, [abortController, isAnimating, text, titleChanger, lastChange]);
+  }, [isAnimating, text, titleChanger, lastChange]);
 
   return (
     <EditableTypography
