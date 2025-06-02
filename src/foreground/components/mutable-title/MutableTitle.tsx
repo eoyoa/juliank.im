@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EditableTypography } from "./EditableTypography.tsx";
-import { TitleChanger } from "./title-changer/TitleChanger.ts";
-import { AbortError } from "./title-changer/titleHelpers.ts";
+import { TitleChanger } from "../../../common/title-changer/TitleChanger.ts";
+import { AbortError } from "../../../common/title-changer/titleHelpers.ts";
 
 function showCaretAtIndex(inputElement: HTMLInputElement, caretIndex: number) {
   inputElement.focus({ preventScroll: true });

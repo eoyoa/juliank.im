@@ -1,4 +1,4 @@
-import { CatController } from "../../../../background/CatController.ts";
+import { CatController } from "../CatController.ts";
 import { AbortError } from "./titleHelpers.ts";
 import { getEdits } from "./edit-distance/editDistance.ts";
 
