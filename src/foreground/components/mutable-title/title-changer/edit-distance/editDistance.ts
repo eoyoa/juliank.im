@@ -64,12 +64,10 @@ export function getEdits(initial: string, target: string) {
 
       switch (diff.type) {
         case "sub": {
-          curr = curr.slice(0, i - 1) + target[j - 1] + curr.slice(i);
-          // TODO: if this is an actual substitution, we should do a deletion then an insertion
-          // TODO: or maybe a selection?
-          caretIndex = i - 1;
-          i--;
-          j--;
+          ({ del, caretIndex } = doDeletion(del, caretIndex));
+          updateEdits(caretIndex, prevCurr, del);
+          caretIndex = doInsertion(caretIndex);
+          del = false;
           break;
         }
         case "ins":
