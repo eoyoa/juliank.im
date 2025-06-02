@@ -1,17 +1,27 @@
+type DiffType = "ins" | "del" | "sub";
+
 export interface Difference {
-  type: "ins" | "del" | "sub";
+  type: DiffType;
   targetIndex: number;
   letter?: string;
 }
 
 export function getDiff(a: string, b: string): Difference[] {
   const dp = editDistanceMatrix(a, b);
+
+  // function print2DArray(arr: DPEntry[][]) {
+  //   for (let i = 0; i < arr.length; i++) {
+  //     console.log(arr[i].map((value) => value.dist).join("\t"));
+  //   }
+  // }
+  //
+  // print2DArray(dp);
   return backtrackEditDistance(dp, b);
 }
 
 interface DPEntry {
   dist: number;
-  type: "ins" | "del" | "sub";
+  type: DiffType;
 }
 
 function editDistanceMatrix(a: string, b: string) {
