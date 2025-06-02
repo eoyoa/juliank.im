@@ -9,7 +9,12 @@ export function Background() {
   console.debug("gpuTier:", gpuTier);
 
   return (
-    <Layer>
+    <Layer
+      sx={{
+        width: "100%",
+        height: "100%",
+      }}
+    >
       <Suspense fallback={null}>
         {gpuTier.tier <= 1 ? <Fallback2DScene /> : <CatScene />}
       </Suspense>

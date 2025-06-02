@@ -63,6 +63,8 @@ export function EditableTypography({
         outlineStyle: "solid",
         outlineColor: "transparent",
       }}
+      width={"fit-content"}
+      maxWidth={"100vw"}
     >
       {text}
     </Typography>
