@@ -12,6 +12,40 @@ export function getEdits(initial: string, target: string) {
 
   let curr = initial;
   let totalEdits = 0;
+
+  function doInsertion(caretIndex: number) {
+    curr = curr.slice(0, i) + target[j - 1] + curr.slice(i);
+    caretIndex = i;
+    j--;
+    return caretIndex;
+  }
+
+  function doDeletion(del: boolean, caretIndex: number) {
+    del = true;
+    curr = curr.slice(0, i - 1) + curr.slice(i);
+    caretIndex = i;
+    i--;
+    return { del, caretIndex };
+  }
+
+  function updateEdits(caretIndex: number, prevCurr: string, del: boolean) {
+    if (
+      edits.length === 0 ||
+      edits[edits.length - 1].caretIndex !== caretIndex
+    ) {
+      edits.push({
+        newTitle: prevCurr,
+        caretIndex,
+        changeType: "caret",
+      });
+    }
+    edits.push({
+      newTitle: curr,
+      caretIndex: del ? caretIndex - 1 : caretIndex + 1,
+      changeType: "text",
+    });
+  }
+
   while (j >= 0) {
     if (flag) {
       break;
@@ -39,15 +73,10 @@ export function getEdits(initial: string, target: string) {
           break;
         }
         case "ins":
-          curr = curr.slice(0, i) + target[j - 1] + curr.slice(i);
-          caretIndex = i;
-          j--;
+          caretIndex = doInsertion(caretIndex);
           break;
         case "del":
-          del = true;
-          curr = curr.slice(0, i - 1) + curr.slice(i);
-          caretIndex = i;
-          i--;
+          ({ del, caretIndex } = doDeletion(del, caretIndex));
           break;
       }
 
@@ -55,22 +84,8 @@ export function getEdits(initial: string, target: string) {
         flag = true;
         break;
       }
-      
-      if (
-        edits.length === 0 ||
-        edits[edits.length - 1].caretIndex !== caretIndex
-      ) {
-        edits.push({
-          newTitle: prevCurr,
-          caretIndex,
-          changeType: "caret",
-        });
-      }
-      edits.push({
-        newTitle: curr,
-        caretIndex: del ? caretIndex - 1 : caretIndex + 1,
-        changeType: "text",
-      });
+
+      updateEdits(caretIndex, prevCurr, del);
       totalEdits++;
     }
   }
