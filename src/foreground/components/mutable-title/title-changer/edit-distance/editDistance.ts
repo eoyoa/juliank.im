@@ -1,64 +1,80 @@
-import { type Difference, getDiff } from "./editDistanceHelpers.ts";
+import { getDiff } from "./editDistanceHelpers.ts";
 import type { TitleChange } from "../TitleChanger.ts";
 
 // convert to a series of moves, then generate and consume in TitleChanger
 export function getEdits(initial: string, target: string) {
-  const diffs = getDiff(initial, target);
+  const table = getDiff(initial, target);
   const edits: TitleChange[] = [];
 
+  let i = initial.length;
+  let j = target.length;
+  let flag = false;
+
   let curr = initial;
-  let diff: Difference | undefined;
-  let i = curr.length;
-  while ((diff = diffs.shift())) {
-    let push = true;
-    let caretIndex = i;
-    const prevCurr = curr;
-    let del = false;
+  let totalEdits = 0;
+  while (j >= 0) {
+    if (flag) {
+      break;
+    }
+    while (i >= 0) {
+      const diff = table[i][j];
+      console.log(i, j, diff);
+      let caretIndex = i;
+      let push = true;
+      let del = false;
+      const prevCurr = curr;
 
-    switch (diff.type) {
-      case "ins":
-        i++;
-        if (!diff.letter) {
-          throw new Error("diff.letter is undefined for insertion move");
+      switch (diff.type) {
+        case "nop":
+          i--;
+          j--;
+          push = false;
+          break;
+        case "sub": {
+          curr = curr.slice(0, i - 1) + target[j - 1] + curr.slice(i);
+          // TODO: if this is an actual substitution, we should do a deletion then an insertion
+          // TODO: or maybe a selection?
+          caretIndex = i - 1;
+          i--;
+          j--;
+          break;
         }
-        curr = curr.slice(0, i - 1) + diff.letter + curr.slice(i - 1);
-        caretIndex = i - 1;
-        break;
-      case "del":
-        del = true;
-        curr = curr.slice(0, i - 1) + curr.slice(i);
-        break;
-      case "sub": {
-        if (!diff.letter) {
-          throw new Error("diff.letter is undefined for substitution move");
-        }
-        curr = curr.slice(0, i - 1) + diff.letter + curr.slice(i);
-        // TODO: if this is an actual substitution, we should do a deletion then an insertion
-        // TODO: or maybe a selection?
-        push = curr !== prevCurr;
+        case "ins":
+          curr = curr.slice(0, i) + target[j - 1] + curr.slice(i);
+          caretIndex = i;
+          j--;
+          break;
+        case "del":
+          del = true;
+          curr = curr.slice(0, i - 1) + curr.slice(i);
+          caretIndex = i;
+          i--;
+          break;
+      }
+
+      if (totalEdits === table[initial.length][target.length].dist) {
+        flag = true;
         break;
       }
-    }
-
-    if (push) {
-      if (
-        edits.length === 0 ||
-        edits[edits.length - 1].caretIndex !== caretIndex
-      ) {
+      if (push) {
+        if (
+          edits.length === 0 ||
+          edits[edits.length - 1].caretIndex !== caretIndex
+        ) {
+          edits.push({
+            newTitle: prevCurr,
+            caretIndex,
+            changeType: "caret",
+          });
+        }
         edits.push({
-          newTitle: prevCurr,
-          caretIndex,
-          changeType: "caret",
+          newTitle: curr,
+          caretIndex: del ? caretIndex - 1 : caretIndex + 1,
+          changeType: "text",
         });
+        totalEdits++;
       }
-      edits.push({
-        newTitle: curr,
-        caretIndex: del ? caretIndex - 1 : i,
-        changeType: "text",
-      });
     }
-
-    i--;
   }
 
   if (edits.length > 0) {

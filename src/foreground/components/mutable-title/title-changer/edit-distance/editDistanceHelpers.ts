@@ -1,4 +1,4 @@
-type DiffType = "ins" | "del" | "sub";
+type DiffType = "ins" | "del" | "sub" | "nop";
 
 export interface Difference {
   type: DiffType;
@@ -6,9 +6,7 @@ export interface Difference {
   letter?: string;
 }
 
-export function getDiff(a: string, b: string): Difference[] {
-  const dp = editDistanceMatrix(a, b);
-
+export function getDiff(a: string, b: string): DPEntry[][] {
   // function print2DArray(arr: DPEntry[][]) {
   //   for (let i = 0; i < arr.length; i++) {
   //     console.log(arr[i].map((value) => value.dist).join("\t"));
@@ -16,7 +14,8 @@ export function getDiff(a: string, b: string): Difference[] {
   // }
   //
   // print2DArray(dp);
-  return backtrackEditDistance(dp, b);
+  // return backtrackEditDistance(dp, b);
+  return editDistanceMatrix(a, b);
 }
 
 interface DPEntry {
@@ -38,7 +37,13 @@ function editDistanceMatrix(a: string, b: string) {
 
   for (let j = 1; j <= b.length; j++) {
     for (let i = 1; i <= a.length; i++) {
-      const substitutionCost = a[i - 1] === b[j - 1] ? 0 : 1;
+      if (a[i - 1] === b[j - 1]) {
+        dp[i][j] = {
+          dist: dp[i - 1][j - 1].dist,
+          type: "nop",
+        };
+        continue;
+      }
 
       dp[i][j] = {
         dist: dp[i - 1][j].dist + 1,
@@ -50,9 +55,9 @@ function editDistanceMatrix(a: string, b: string) {
           type: "ins",
         };
       }
-      if (dp[i - 1][j - 1].dist + substitutionCost < dp[i][j].dist) {
+      if (dp[i - 1][j - 1].dist + 1 < dp[i][j].dist) {
         dp[i][j] = {
-          dist: dp[i - 1][j - 1].dist + substitutionCost,
+          dist: dp[i - 1][j - 1].dist + 1,
           type: "sub",
         };
       }
@@ -62,37 +67,37 @@ function editDistanceMatrix(a: string, b: string) {
   return dp;
 }
 
-function backtrackEditDistance(dp: DPEntry[][], target: string): Difference[] {
-  let i = dp.length - 1;
-  let j = dp[0].length - 1;
-  const diffs: Difference[] = [];
-  while (i !== 0 || j !== 0) {
-    const entry = dp[i][j];
-    const targetIndex = i > j ? i : j;
-    switch (entry.type) {
-      case "ins":
-        diffs.push({
-          type: "ins",
-          targetIndex,
-          letter: target[targetIndex - 1],
-        });
-        j--;
-        break;
-      case "del":
-        diffs.push({ type: "del", targetIndex });
-        i--;
-        break;
-      case "sub":
-        diffs.push({
-          type: "sub",
-          targetIndex,
-          letter: target[targetIndex - 1],
-        });
-        i--;
-        j--;
-        break;
-    }
-  }
-
-  return diffs;
-}
+// function backtrackEditDistance(dp: DPEntry[][], target: string): Difference[] {
+//   let i = dp.length - 1;
+//   let j = dp[0].length - 1;
+//   const diffs: Difference[] = [];
+//   while (i !== 0 || j !== 0) {
+//     const entry = dp[i][j];
+//     const targetIndex = i > j ? i : j;
+//     switch (entry.type) {
+//       case "ins":
+//         diffs.push({
+//           type: "ins",
+//           targetIndex,
+//           letter: target[targetIndex - 1],
+//         });
+//         j--;
+//         break;
+//       case "del":
+//         diffs.push({ type: "del", targetIndex });
+//         i--;
+//         break;
+//       case "sub":
+//         diffs.push({
+//           type: "sub",
+//           targetIndex,
+//           letter: target[targetIndex - 1],
+//         });
+//         i--;
+//         j--;
+//         break;
+//     }
+//   }
+//
+//   return diffs;
+// }
