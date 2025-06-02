@@ -19,16 +19,16 @@ export function getEdits(initial: string, target: string) {
     while (i >= 0) {
       const diff = table[i][j];
       let caretIndex = i;
-      let push = true;
       let del = false;
       const prevCurr = curr;
 
+      if (diff.type === "nop") {
+        i--;
+        j--;
+        continue;
+      }
+
       switch (diff.type) {
-        case "nop":
-          i--;
-          j--;
-          push = false;
-          break;
         case "sub": {
           curr = curr.slice(0, i - 1) + target[j - 1] + curr.slice(i);
           // TODO: if this is an actual substitution, we should do a deletion then an insertion
@@ -55,24 +55,23 @@ export function getEdits(initial: string, target: string) {
         flag = true;
         break;
       }
-      if (push) {
-        if (
-          edits.length === 0 ||
-          edits[edits.length - 1].caretIndex !== caretIndex
-        ) {
-          edits.push({
-            newTitle: prevCurr,
-            caretIndex,
-            changeType: "caret",
-          });
-        }
+      
+      if (
+        edits.length === 0 ||
+        edits[edits.length - 1].caretIndex !== caretIndex
+      ) {
         edits.push({
-          newTitle: curr,
-          caretIndex: del ? caretIndex - 1 : caretIndex + 1,
-          changeType: "text",
+          newTitle: prevCurr,
+          caretIndex,
+          changeType: "caret",
         });
-        totalEdits++;
       }
+      edits.push({
+        newTitle: curr,
+        caretIndex: del ? caretIndex - 1 : caretIndex + 1,
+        changeType: "text",
+      });
+      totalEdits++;
     }
   }
 
