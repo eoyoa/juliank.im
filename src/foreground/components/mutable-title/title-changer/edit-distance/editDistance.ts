@@ -18,7 +18,6 @@ export function getEdits(initial: string, target: string) {
     }
     while (i >= 0) {
       const diff = table[i][j];
-      console.log(i, j, diff);
       let caretIndex = i;
       let push = true;
       let del = false;

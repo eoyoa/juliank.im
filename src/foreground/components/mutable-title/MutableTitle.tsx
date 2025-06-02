@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { EditableTypography } from "./EditableTypography.tsx";
 import { TitleChanger } from "./title-changer/TitleChanger.ts";
 import { AbortError } from "./title-changer/titleHelpers.ts";
@@ -17,24 +17,29 @@ export function MutableTitle() {
   // TODO: this state variables can probably be abstracted away when cat
   const [isAnimating, setIsAnimating] = useState<boolean>(true);
 
-  const handleUserInteraction = () => {
+  const currentAbortController = useRef<AbortController | null>(null);
+  const handleUserInteraction = useCallback(() => {
+    currentAbortController.current?.abort();
     setIsAnimating(false);
-  };
+  }, []);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const abortController = new AbortController();
+    currentAbortController.current = abortController;
 
-    // TODO: if not animating, go back to animating eventually
-    // let resumeTimer: number | undefined;
+    let resumeTimer: number | undefined;
     if (!isAnimating) {
-      // resumeTimer = setTimeout(() => {
-      //   titleChanger.clearEdits();
-      //   setIsAnimating(true);
-      // }, TitleChanger.resumeDelay);
+      resumeTimer = setTimeout(() => {
+        titleChanger.clearEdits();
+        setIsAnimating(true);
+      }, TitleChanger.resumeDelay);
 
-      return;
+      return () => {
+        clearTimeout(resumeTimer);
+        currentAbortController.current = null;
+      };
     }
 
     const changeTitle = async () => {
@@ -64,7 +69,7 @@ export function MutableTitle() {
 
     return () => {
       abortController.abort();
-      // clearTimeout(resumeTimer);
+      currentAbortController.current = null;
     };
   }, [isAnimating, text, titleChanger, lastChange]);
 
