@@ -59,13 +59,9 @@ export function MutableTitle() {
       }
     };
 
-    changeTitle().catch((err: unknown) => {
-      if (err instanceof AbortError) {
-        console.warn(err);
-        return;
-      }
-      console.error(err);
-    });
+    changeTitle().catch((err: unknown) =>
+      err instanceof AbortError ? console.warn : console.error,
+    );
 
     return () => {
       abortController.abort();
