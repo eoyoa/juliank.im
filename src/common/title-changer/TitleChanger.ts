@@ -72,11 +72,14 @@ export class TitleChanger {
           newTitle: currTitle,
           caretIndex: currTitle.length,
         });
-        resolve({
-          newTitle: currTitle,
-          caretIndex: currTitle.length,
-          changeType: "text",
-        });
+        this.#catController.type(
+          {
+            newTitle: currTitle,
+            caretIndex: currTitle.length,
+            changeType: "text",
+          },
+          resolve,
+        );
         return;
       }
 
@@ -95,8 +98,10 @@ export class TitleChanger {
         this.next(currTitle, abortSignal).then(resolve).catch(reject);
         return;
       }
+      console.warn("out of thing", currTitle, targetTitle, this.#edits);
 
       if (!setupAbortHandler()) {
+        console.warn("early return from setupAbortHandler");
         return;
       }
 
@@ -116,6 +121,14 @@ export class TitleChanger {
         this.#resetDelays();
       }, TitleChanger.getDelay());
     });
+  }
+
+  restart() {
+    if (this.#titleIndex >= TitleChanger.titles.length - 1) {
+      this.#titleIndex = TitleChanger.titles.length - 1;
+    }
+    this.clearEdits();
+    this.#catController.resetDoneTyping();
   }
 
   #resetDelays() {

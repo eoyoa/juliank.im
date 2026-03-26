@@ -14,19 +14,16 @@ export function Cat() {
   };
 
   useEffect(() => {
-    let timer: number | undefined;
-
     const handleType = () => {
       setIsTyping(true);
       setOpen(true);
-      console.debug("animated cat");
+      // console.debug("animated cat");
     };
 
     catController.attachTypeCallback(handleType);
 
     return () => {
       catController.detachTypeCallback();
-      clearTimeout(timer);
     };
   }, [catController]);
 

@@ -8,6 +8,7 @@ export class CatController {
 
   #typeCallback: (() => void) | undefined;
   #isDoneTyping: boolean = false;
+  #isTyping: boolean = true;
 
   private constructor() {}
 
@@ -27,6 +28,19 @@ export class CatController {
     return this.#isDoneTyping;
   }
 
+  resetDoneTyping() {
+    this.#isDoneTyping = false;
+  }
+
+  get isTyping() {
+    return this.#isTyping;
+  }
+
+  set isTyping(value: boolean) {
+    this.#isTyping = value;
+    this.#typeCallback?.();
+  }
+
   type(
     titleChange: TitleChange,
     resolve: (value: TitleChange | PromiseLike<TitleChange>) => void,
@@ -36,6 +50,7 @@ export class CatController {
       titleChange.newTitle ===
       TitleChanger.titles[TitleChanger.titles.length - 1]
     ) {
+      console.warn("done typing");
       this.#isDoneTyping = true;
     }
     if (titleChange.changeType === "text") {

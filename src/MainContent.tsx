@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 
 export function MainContent() {
   return (
-    <Box sx={{ position: "relative", width: 1, height: 1 }}>
+    <Box sx={{ position: "relative", width: "100vw", height: "100vh" }}>
       <Foreground />
       <Background />
     </Box>
