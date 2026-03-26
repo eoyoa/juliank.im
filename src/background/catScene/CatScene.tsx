@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, OrthographicCamera } from "@react-three/drei";
+import { OrthographicCamera } from "@react-three/drei";
 import { Suspense } from "react";
 import { Model } from "./Model";
 import { Vector3 } from "three";
@@ -7,6 +7,7 @@ import { Fallback2DScene } from "../fallback/Fallback2DScene.tsx";
 
 export function CatScene() {
   const targetPos = new Vector3(1.5, 0, -0.25);
+
   return (
     <Canvas>
       <Suspense fallback={<Fallback2DScene />}>
@@ -22,8 +23,10 @@ export function CatScene() {
         near={0.0001}
         far={1000}
         position={targetPos.clone().add(new Vector3(-1, 1, -1))}
+        onUpdate={(cam) => {
+          cam.lookAt(targetPos);
+        }}
       />
-      <OrbitControls enableDamping dampingFactor={0.05} target={targetPos} />
     </Canvas>
   );
 }

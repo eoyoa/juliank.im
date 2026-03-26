@@ -2,7 +2,12 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { MainContent } from "./MainContent.tsx";
-import { createTheme, responsiveFontSizes, ThemeProvider } from "@mui/material";
+import {
+  createTheme,
+  CssBaseline,
+  responsiveFontSizes,
+  ThemeProvider,
+} from "@mui/material";
 import "@fontsource/roboto-mono";
 
 const theme = responsiveFontSizes(
@@ -21,8 +26,10 @@ const theme = responsiveFontSizes(
 
 createRoot(document.getElementById("root") as Element).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
-      <MainContent />
-    </ThemeProvider>
+    <CssBaseline>
+      <ThemeProvider theme={theme}>
+        <MainContent />
+      </ThemeProvider>
+    </CssBaseline>
   </StrictMode>,
 );

@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { MutableTitle } from "./components/mutable-title/MutableTitle.tsx";
 import { LinkButtons } from "./components/link-buttons/LinkButtons.tsx";
 import { Layer } from "../common/Layer.tsx";
@@ -12,9 +12,11 @@ export function Foreground() {
         height={"100%"}
         alignItems={"center"}
         justifyContent={"center"}
+        spacing={2}
       >
         <MutableTitle />
         <LinkButtons />
+        <Typography> cs | music </Typography>
       </Stack>
     </Layer>
   );
