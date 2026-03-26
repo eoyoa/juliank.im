@@ -6,7 +6,7 @@ import { CatScene } from "./catScene/CatScene.tsx";
 
 export function Background() {
   const gpuTier = useDetectGPU();
-  console.debug("gpuTier:", gpuTier);
+  // console.debug("gpuTier:", gpuTier);
 
   return (
     <Layer

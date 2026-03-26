@@ -88,13 +88,13 @@ export function getEdits(initial: string, target: string) {
     }
   }
 
-  if (edits.length > 0) {
-    const editsCopy = Object.assign([], edits);
-    const correct = edits[edits.length - 1].newTitle === target;
-    if (!correct) {
-      console.error(correct, editsCopy);
-    } else console.debug(correct, editsCopy);
-  }
+  // if (edits.length > 0) {
+  //   const editsCopy = Object.assign([], edits);
+  //   const correct = edits[edits.length - 1].newTitle === target;
+  //   if (!correct) {
+  //     console.error(correct, editsCopy);
+  //   } else console.debug(correct, editsCopy);
+  // }
 
   return edits;
 }

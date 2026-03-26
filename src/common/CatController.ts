@@ -45,12 +45,12 @@ export class CatController {
     titleChange: TitleChange,
     resolve: (value: TitleChange | PromiseLike<TitleChange>) => void,
   ) {
-    console.debug("cat typing:", titleChange);
+    // console.debug("cat typing:", titleChange);
     if (
       titleChange.newTitle ===
       TitleChanger.titles[TitleChanger.titles.length - 1]
     ) {
-      console.warn("done typing");
+      // console.warn("done typing");
       this.#isDoneTyping = true;
     }
     if (titleChange.changeType === "text") {

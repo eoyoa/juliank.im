@@ -8,7 +8,7 @@ import "@fontsource/roboto-mono";
 const theme = responsiveFontSizes(
   createTheme({
     colorSchemes: {
-      dark: true,
+      dark: false,
     },
     typography: {
       fontFamily: ['"Roboto Mono"', "monospace"].join(","),

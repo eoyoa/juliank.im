@@ -48,12 +48,12 @@ export function MutableTitle() {
 
     const changeTitle = async () => {
       while (!abortController.signal.aborted && !catController.isDoneTyping) {
-        console.debug(
-          "changing title, current:",
-          text,
-          lastChange,
-          catController.isDoneTyping,
-        );
+        // console.debug(
+        //   "changing title, current:",
+        //   text,
+        //   lastChange,
+        //   catController.isDoneTyping,
+        // );
         const { newTitle, caretIndex, changeType } = await titleChanger.next(
           text,
           abortController.signal,

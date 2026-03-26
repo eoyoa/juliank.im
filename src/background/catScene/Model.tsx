@@ -40,12 +40,12 @@ export function Model(props: ThreeElements["group"]) {
 
   const handleType = useCallback(() => {
     const shouldBeIdle = !catController.isTyping || catController.isDoneTyping;
-    console.debug(
-      "cat type:",
-      shouldBeIdle,
-      catController.isTyping,
-      catController.isDoneTyping,
-    );
+    // console.debug(
+    //   "cat type:",
+    //   shouldBeIdle,
+    //   catController.isTyping,
+    //   catController.isDoneTyping,
+    // );
     const typingAction = actions["Typing"];
     const keyboardAction = actions["KeyboardTyping"];
     if (!typingAction || !keyboardAction) return;
